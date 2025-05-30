@@ -1,98 +1,139 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>你能在零下50度中活下來嗎？</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body {
-    background: linear-gradient(135deg, #a8d0ff 0%, #002f52 100%);
-    color: #e0f0ff;
-    font-family: 'Noto Sans TC', sans-serif;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-  }
-  .frost-card {
-    background: rgba(255 255 255 / 0.15);
-    backdrop-filter: blur(8px);
-    border-radius: 16px;
-    box-shadow: 0 0 15px rgba(255 255 255 / 0.25);
-    padding: 20px;
-  }
-  .btn-ice {
-    background: linear-gradient(135deg, #4fc3f7, #0288d1);
-    box-shadow: 0 4px 15px rgba(4, 121, 197, 0.6);
-    color: white;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    user-select: none;
-  }
-  .btn-ice:hover {
-    background: linear-gradient(135deg, #6dd5fa, #0d47a1);
-    box-shadow: 0 6px 20px rgba(4, 121, 197, 0.8);
-    transform: scale(1.05);
-  }
-  .option-btn {
-    margin: 10px 0;
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-  #langToggle {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    background: rgba(255 255 255 / 0.15);
-    border: none;
-    color: #e0f0ff;
-    padding: 8px 16px;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  #langToggle:hover {
-    background: rgba(255 255 255 / 0.3);
-  }
-  #result {
-    margin-top: 40px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>你能在零下50度中活下來嗎？ / Can You Survive at -50°C?</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+ <style>
+    body {
+      background: linear-gradient(135deg, #a8d0ff 0%, #002f52 100%);
+      color: #e0f0ff;
+      font-family: 'Noto Sans TC', sans-serif;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #d0e7ff;
+      font-size: 1.2rem;
+      user-select: none;
+      pointer-events: none;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) translateX(0); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+    }
+    .frost-card {
+      background: rgba(255 255 255 / 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(255 255 255 / 0.25);
+      padding: 20px;
+    }
+    .btn-ice {
+      background: linear-gradient(135deg, #4fc3f7, #0288d1);
+      box-shadow: 0 4px 15px rgba(4, 121, 197, 0.6);
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .btn-ice:hover {
+      background: linear-gradient(135deg, #6dd5fa, #0d47a1);
+      box-shadow: 0 6px 20px rgba(4, 121, 197, 0.8);
+      transform: scale(1.05);
+    }
+    .btn-ice:active {
+      animation: crack 0.4s ease forwards;
+    }
+    @keyframes crack {
+      0% {
+        box-shadow: 0 0 15px #a0e9ff;
+        transform: scale(1);
+        filter: brightness(1);
+      }
+      50% {
+        box-shadow:
+          0 0 10px #a0e9ff,
+          0 0 20px #00bfff,
+          0 0 40px #00f0ff;
+        filter: brightness(1.3);
+        transform: scale(1.1);
+      }
+      100% {
+        box-shadow: none;
+        filter: brightness(1);
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 <body>
   <button id="langToggle">English</button>
 
-  <div class="max-w-xl mx-auto p-6 frost-card mt-10">
-    <h1 id="title" class="text-4xl font-bold mb-6 text-center drop-shadow-lg">你能在零下50度中活下來嗎？</h1>
+  <div id="snow-container"></div>
 
-    <div id="quiz">
-      <div id="questionText" class="text-xl mb-4"></div>
-      <div id="options"></div>
-      <button id="nextBtn" class="btn-ice px-5 py-3 mt-4 w-full" disabled>下一題</button>
+  <div class="max-w-xl mx-auto p-6 frost-card mt-10">
+    <h1 id="title" class="text-4xl font-bold mb-8 text-center drop-shadow-lg">你能在零下50度中活下來嗎？</h1>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
     </div>
 
-    <div id="result" class="hidden text-white text-center">
-      <h2 id="resultTitle" class="text-3xl font-semibold mb-4 drop-shadow-lg">你的求生人格</h2>
+    <div id="quiz">
+      <div id="questionContainer" class="mb-8">
+        <p id="questionNumber" class="text-sm text-blue-200 mb-3">第 1 題 / 共 5 題</p>
+        <h3 id="questionText" class="text-xl font-semibold mb-6 drop-shadow-lg"></h3>
+        <div id="optionsContainer"></div>
+      </div>
+      
+      <div class="flex justify-between mt-8">
+        <button id="prevBtn" class="btn-ice px-5 py-3 opacity-50 cursor-not-allowed" disabled>上一題</button>
+        <button id="nextBtn" class="btn-ice px-5 py-3 opacity-50 cursor-not-allowed" disabled>下一題</button>
+      </div>
+    </div>
+
+    <div id="result" class="mt-8 hidden text-white text-center">
+      <h2 id="resultTitle" class="text-3xl font-semibold mb-2 drop-shadow-lg">你的求生人格</h2>
+      <div class="mbti-result mb-4" id="mbtiType">ENFP</div>
       <canvas id="radarChart" width="300" height="300"></canvas>
-      <p id="typeText" class="mt-5 text-xl font-medium max-w-lg mx-auto"></p>
-      <p id="descText" class="mt-4 max-w-lg mx-auto leading-relaxed text-blue-200"></p>
+      <p id="typeExplanation" class="mt-5 text-xl font-medium max-w-lg mx-auto"></p>
+      <p id="descText" class="mt-3 max-w-lg mx-auto leading-relaxed text-blue-200"></p>
+      <button id="restartBtn" class="btn-ice px-6 py-3 mt-6">重新測驗</button>
     </div>
   </div>
 
 <script>
-  // 題目資料
+  // 雪花特效程式碼
+  const snowContainer = document.getElementById('snow-container');
+  function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.style.left = Math.random() * window.innerWidth + 'px';
+    snowflake.style.animationDuration = 5 + Math.random() * 5 + 's';
+    snowflake.style.fontSize = 10 + Math.random() * 20 + 'px';
+    snowflake.textContent = '❄';
+    snowContainer.appendChild(snowflake);
+    setTimeout(() => snowflake.remove(), 10000);
+  }
+  setInterval(createSnowflake, 200);
+
+  // 雙語題目資料
   const quizData = {
     zh: [
       {
         text: "你發現氣溫已降到零下五十度，你會？",
         options: [
           { text: "按計畫出發，我相信自己判斷", score: { I: 1, T: 1 } },
-          { text: "改變計畫，等有人陪我再出發", score: { F: 1, J: 1 } },
+          { text: "改變計畫，等有人陪我再出發", score: { E: 1, F: 1 } },
           { text: "想太多會拖慢進度，先走再說", score: { E: 1, P: 1 } },
           { text: "不出發，尋找安全處等待救援", score: { I: 1, J: 1 } }
         ]
@@ -110,7 +151,7 @@
         text: "你好不容易點起火但火卻熄滅了，你會怎麼做？",
         options: [
           { text: "尋找樹枝與更好的位置重新嘗試", score: { T: 1, S: 1 } },
-          { text: "內心開始出現絕望與過往回憶", score: { I: 1, N: 1 } },
+          { text: "內心開始出現絕望與過往回憶", score: { I: 1, F: 1 } },
           { text: "用身體取暖，等待救援", score: { I: 1, N: 1 } },
           { text: "嘗試喊叫求救或尋找其他人", score: { E: 1, F: 1 } }
         ]
@@ -127,211 +168,327 @@
       {
         text: "你沒有任何的火柴能夠點火了，你會？",
         options: [
-          { text: "放下一切靜靜等待，也許是命運的安排", score: { I: 1, N: 1 } },
+          { text: "放下一切靜靜等待，也許是命運的安排", score: { I: 1, F: 1 } },
           { text: "抱住狗，試圖從牠身上取暖", score: { F: 1, S: 1 } },
           { text: "盡最後一絲力氣繼續前進", score: { T: 1, J: 1 } },
-          { text: "試圖找出能發出訊號的東西求救", score: { E: 1, P: 1 } }
+          { text: "試圖找出能發出訊號的東西求救", score: { N: 1, P: 1 } }
         ]
       }
     ],
     en: [
       {
-        text: "You find the temperature has dropped to minus fifty degrees. What will you do?",
+        text: "You find the temperature has dropped to minus fifty degrees, what will you do?",
         options: [
-          { text: "Start as planned, I trust my judgment", score: { I: 1, T: 1 } },
-          { text: "Change plans, wait for someone to accompany me", score: { F: 1, J: 1 } },
-          { text: "Overthinking slows progress, just go first", score: { E: 1, P: 1 } },
-          { text: "Don't depart, find a safe place and wait for rescue", score: { I: 1, J: 1 } }
+          { text: "Stick to the plan, I trust my judgment", score: { I: 1, T: 1 } },
+          { text: "Change plans, wait for company before setting off", score: { E: 1, F: 1 } },
+          { text: "Overthinking slows progress, move forward first", score: { E: 1, P: 1 } },
+          { text: "Don't set off, find a safe place and wait for rescue", score: { I: 1, J: 1 } }
         ]
       },
       {
-        text: "You fell into icy cold water. What will you do?",
+        text: "You fell into icy cold creek, what do you do?",
         options: [
-          { text: "Find shelter under a tree and make a fire", score: { J: 1, S: 1 } },
-          { text: "Immediately start a fire on the spot, no delay", score: { P: 1, T: 1 } },
+          { text: "Find a windbreak under a tree and start a fire", score: { J: 1, S: 1 } },
+          { text: "Start a fire immediately on the spot, no delay", score: { P: 1, T: 1 } },
           { text: "Try to warm up by running", score: { E: 1, S: 1 } },
-          { text: "Stay calm, remove wet clothes, find dry place to warm up", score: { I: 1, N: 1 } }
+          { text: "Stay calm, take off wet clothes, find a dry place to warm up", score: { I: 1, N: 1 } }
         ]
       },
       {
-        text: "You managed to light a fire, but it went out. What will you do?",
+        text: "You managed to start a fire but it went out, what do you do?",
         options: [
-          { text: "Look for branches and a better spot to try again", score: { T: 1, S: 1 } },
-          { text: "Feel despair and recall past memories", score: { I: 1, N: 1 } },
-          { text: "Warm your body and wait for rescue", score: { I: 1, N: 1 } },
-          { text: "Try to shout for help or find others", score: { E: 1, F: 1 } }
+          { text: "Look for branches and better place to try again", score: { T: 1, S: 1 } },
+          { text: "Feel despair and recall past memories", score: { I: 1, F: 1 } },
+          { text: "Use body heat to warm up and wait for rescue", score: { I: 1, N: 1 } },
+          { text: "Try shouting for help or look for others", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "Your fingers are frostbitten and barely movable. What will you do?",
+        text: "Your fingers are frostbitten and almost immobile, what will you do?",
         options: [
-          { text: "Grind teeth and keep trying to make fire, can't stop", score: { T: 1, J: 1 } },
-          { text: "Sit down to conserve energy, think about past life", score: { I: 1, N: 1 } },
+          { text: "Grin and bear it to try to start fire, I can't stop", score: { T: 1, J: 1 } },
+          { text: "Sit down to conserve energy, think about my past life", score: { I: 1, N: 1 } },
           { text: "Try to use mouth or other body parts to replace hands", score: { S: 1, P: 1 } },
-          { text: "Shout to vent emotions and release stress", score: { E: 1, F: 1 } }
+          { text: "Shout to vent emotions, hoping to release stress", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "You have no matches left to start a fire. What will you do?",
+        text: "You have no matches left to start a fire, what will you do?",
         options: [
-          { text: "Give up and wait quietly, maybe fate has a plan", score: { I: 1, N: 1 } },
-          { text: "Hold onto a dog and try to get warmth", score: { F: 1, S: 1 } },
-          { text: "Use last bit of strength to keep moving forward", score: { T: 1, J: 1 } },
-          { text: "Try to find something to signal for help", score: { E: 1, P: 1 } }
+          { text: "Give up and wait quietly, maybe it's fate", score: { I: 1, F: 1 } },
+          { text: "Hold the dog, try to warm up from it", score: { F: 1, S: 1 } },
+          { text: "Use last strength to keep going", score: { T: 1, J: 1 } },
+          { text: "Try to find something that can send a signal for help", score: { N: 1, P: 1 } }
         ]
       }
     ]
   };
 
-  const mbtiDescriptions = {
+  const mbtiTypes = {
     zh: {
-      ISTJ: "務實且有責任感的守護者，喜歡計畫與秩序。",
-      ISFJ: "溫柔且細心的守護者，重視傳統與他人需求。",
-      INFJ: "深思且理想主義的顧問，尋求意義與成長。",
-      INTJ: "獨立且有策略性的規劃者，重視知識與效率。",
-      ISTP: "冷靜且實用的問題解決者，喜歡動手做事。",
-      ISFP: "溫和且有藝術感的靈魂，享受當下與美感。",
-      INFP: "理想且富同情心的調停者，追求內心價值。",
-      INTP: "分析且好奇的思想家，喜歡理論與探究。",
-      ESTP: "活潑且冒險的實踐者，擅長應對緊急狀況。",
-      ESFP: "開朗且愛熱鬧的表演者，享受生活樂趣。",
-      ENFP: "熱情且有創意的激勵者，喜歡新想法與人群。",
-      ENTP: "機智且善辯的發明家，喜歡挑戰與改變。",
-      ESTJ: "組織且實際的管理者，擅長計劃與決策。",
-      ESFJ: "親切且合作的照顧者，重視和諧與支持。",
-      ENFJ: "有魅力且具同理心的領導者，激勵他人成長。",
-      ENTJ: "果斷且有遠見的指揮官，擅長戰略與領導。"
+      INTJ: { name: "建築師", desc: "理性冷靜的策略家，在極端環境下能保持清醒思考並制定長遠計畫。" },
+      INTP: { name: "思想家", desc: "獨立思考的分析者，會用邏輯和創意尋找生存的可能性。" },
+      ENTJ: { name: "指揮官", desc: "天生的領導者，在危機中能組織資源並帶領他人脫困。" },
+      ENTP: { name: "辯論家", desc: "機智靈活的創新者，能在絕境中找到意想不到的解決方案。" },
+      INFJ: { name: "提倡者", desc: "直覺敏銳的理想主義者，會憑藉內在指引尋找生存之道。" },
+      INFP: { name: "調停者", desc: "堅持價值觀的夢想家，即使面臨死亡也不會放棄內心的信念。" },
+      ENFJ: { name: "主人公", desc: "鼓舞人心的領袖，會為了拯救他人而奮不顧身。" },
+      ENFP: { name: "活動家", desc: "熱情洋溢的自由靈魂，會用樂觀和創意面對最困難的挑戰。" },
+      ISTJ: { name: "物流師", desc: "踏實可靠的實用主義者，會系統性地執行每一個生存步驟。" },
+      ISFJ: { name: "守護者", desc: "默默奉獻的保護者，會優先確保同伴的安全。" },
+      ESTJ: { name: "總經理", desc: "高效執行的管理者，會組織所有可用資源最大化生存機會。" },
+      ESFJ: { name: "執政官", desc: "關懷他人的合作者，會團結眾人一起面對困境。" },
+      ISTP: { name: "鑑賞家", desc: "冷靜實用的手藝人，會運用技能和工具解決實際生存問題。" },
+      ISFP: { name: "探險家", desc: "溫和靈活的藝術家，會以自己的方式適應惡劣環境。" },
+      ESTP: { name: "企業家", desc: "大膽行動的冒險者，會在危機中抓住每一個機會。" },
+      ESFP: { name: "表演者", desc: "樂觀開朗的娛樂者，會用正面態度鼓舞自己和他人。" }
     },
     en: {
-      ISTJ: "Responsible and practical guardian who values order and planning.",
-      ISFJ: "Gentle and caring protector who values tradition and others' needs.",
-      INFJ: "Thoughtful and idealistic counselor seeking meaning and growth.",
-      INTJ: "Independent and strategic planner valuing knowledge and efficiency.",
-      ISTP: "Calm and practical problem-solver who likes hands-on tasks.",
-      ISFP: "Gentle and artistic soul who enjoys the moment and aesthetics.",
-      INFP: "Idealistic and compassionate mediator pursuing inner values.",
-      INTP: "Analytical and curious thinker who enjoys theories and exploration.",
-      ESTP: "Lively and adventurous doer skilled at handling emergencies.",
-      ESFP: "Cheerful and outgoing performer who enjoys life’s pleasures.",
-      ENFP: "Passionate and creative motivator who loves new ideas and people.",
-      ENTP: "Witty and argumentative inventor who enjoys challenges and change.",
-      ESTJ: "Organized and practical manager skilled in planning and decisions.",
-      ESFJ: "Kind and cooperative caregiver who values harmony and support.",
-      ENFJ: "Charismatic and empathetic leader who inspires growth in others.",
-      ENTJ: "Decisive and visionary commander skilled in strategy and leadership."
+      INTJ: { name: "Architect", desc: "Rational strategist who maintains clear thinking and long-term planning in extreme environments." },
+      INTP: { name: "Thinker", desc: "Independent analyst who uses logic and creativity to find survival possibilities." },
+      ENTJ: { name: "Commander", desc: "Natural leader who organizes resources and leads others out of crisis." },
+      ENTP: { name: "Debater", desc: "Witty innovator who finds unexpected solutions in desperate situations." },
+      INFJ: { name: "Advocate", desc: "Intuitive idealist who follows inner guidance to find survival paths." },
+      INFP: { name: "Mediator", desc: "Value-driven dreamer who never gives up inner beliefs even facing death." },
+      ENFJ: { name: "Protagonist", desc: "Inspiring leader who fights selflessly to save others." },
+      ENFP: { name: "Campaigner", desc: "Enthusiastic free spirit who faces the toughest challenges with optimism and creativity." },
+      ISTJ: { name: "Logistician", desc: "Reliable pragmatist who systematically executes every survival step." },
+      ISFJ: { name: "Defender", desc: "Quietly dedicated protector who prioritizes companions' safety." },
+      ESTJ: { name: "Executive", desc: "Efficient manager who organizes all available resources to maximize survival chances." },
+      ESFJ: { name: "Consul", desc: "Caring collaborator who unites everyone to face difficulties together." },
+      ISTP: { name: "Virtuoso", desc: "Cool practical craftsman who uses skills and tools to solve actual survival problems." },
+      ISFP: { name: "Adventurer", desc: "Gentle flexible artist who adapts to harsh environments in their own way." },
+      ESTP: { name: "Entrepreneur", desc: "Bold adventurer who seizes every opportunity in crisis." },
+      ESFP: { name: "Entertainer", desc: "Optimistic cheerful performer who encourages self and others with positive attitude." }
     }
   };
 
-  let currentLang = "zh";
+  let currentLang = 'zh';
   let currentQuestionIndex = 0;
-  let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
-  let selectedOptionIndex = null;
-  let radarChart = null;
+  let answers = [];
+  let totalQuestions = quizData[currentLang].length;
 
-  const titleEl = document.getElementById("title");
-  const questionTextEl = document.getElementById("questionText");
-  const optionsEl = document.getElementById("options");
-  const nextBtn = document.getElementById("nextBtn");
-  const resultEl = document.getElementById("result");
-  const typeText = document.getElementById("typeText");
-  const descText = document.getElementById("descText");
-  const resultTitle = document.getElementById("resultTitle");
-  const langToggle = document.getElementById("langToggle");
+  // DOM elements
+  const titleEl = document.getElementById('title');
+  const quizEl = document.getElementById('quiz');
+  const questionNumberEl = document.getElementById('questionNumber');
+  const questionTextEl = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressFill = document.getElementById('progressFill');
+  const resultSection = document.getElementById('result');
+  const resultTitleEl = document.getElementById('resultTitle');
+  const mbtiTypeEl = document.getElementById('mbtiType');
+  const typeExplanationEl = document.getElementById('typeExplanation');
+  const descTextEl = document.getElementById('descText');
+  const langToggle = document.getElementById('langToggle');
+  const restartBtn = document.getElementById('restartBtn');
 
-  function loadQuestion() {
-    nextBtn.disabled = true;
-    selectedOptionIndex = null;
-    const question = quizData[currentLang][currentQuestionIndex];
-    questionTextEl.textContent = question.text;
-    optionsEl.innerHTML = "";
-
-    question.options.forEach((opt, idx) => {
-      const btn = document.createElement("button");
-      btn.textContent = opt.text;
-      btn.className = "btn-ice option-btn";
-      btn.type = "button";
-      btn.onclick = () => {
-        selectedOptionIndex = idx;
-        nextBtn.disabled = false;
-        // 標示選取狀態
-        Array.from(optionsEl.children).forEach(b => b.classList.remove("opacity-60"));
-        btn.classList.remove("opacity-60");
-        Array.from(optionsEl.children).forEach(b => b !== btn ? b.classList.add("opacity-60") : null);
-      };
-      optionsEl.appendChild(btn);
-    });
+  function updateProgress() {
+    const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+    progressFill.style.width = progress + '%';
   }
 
-  function calculateResult() {
-    // 累加分數
+  function renderCurrentQuestion() {
     const question = quizData[currentLang][currentQuestionIndex];
-    const chosen = question.options[selectedOptionIndex];
-    for (const key in chosen.score) {
-      scores[key] += chosen.score[key];
+    
+    questionNumberEl.textContent = currentLang === 'zh' 
+      ? `第 ${currentQuestionIndex + 1} 題 / 共 ${totalQuestions} 題`
+      : `Question ${currentQuestionIndex + 1} / ${totalQuestions}`;
+    
+    questionTextEl.textContent = question.text;
+    
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-ice block w-full text-left px-4 py-3 mb-3';
+      btn.textContent = option.text;
+      
+      // 如果這題已經有答案，標示選中狀態
+      if (answers[currentQuestionIndex] === index) {
+        btn.classList.add('selected');
+      }
+      
+      btn.addEventListener('click', () => selectOption(index));
+      optionsContainer.appendChild(btn);
+    });
+    
+    updateProgress();
+    updateNavigationButtons();
+  }
+
+  function selectOption(optionIndex) {
+    answers[currentQuestionIndex] = optionIndex;
+    
+    // 更新選項的視覺狀態
+    const buttons = optionsContainer.querySelectorAll('button');
+    buttons.forEach((btn, index) => {
+      btn.classList.toggle('selected', index === optionIndex);
+    });
+    
+    updateNavigationButtons();
+  }
+
+  function updateNavigationButtons() {
+    // 上一題按鈕
+    if (currentQuestionIndex === 0) {
+      prevBtn.disabled = true;
+      prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+      prevBtn.disabled = false;
+      prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    
+    // 下一題按鈕
+    const hasAnswer = answers[currentQuestionIndex] !== undefined;
+    const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
+    
+    if (isLastQuestion) {
+      nextBtn.textContent = currentLang === 'zh' ? '查看結果' : 'View Result';
+    } else {
+      nextBtn.textContent = currentLang === 'zh' ? '下一題' : 'Next';
+    }
+    
+    if (hasAnswer) {
+      nextBtn.disabled = false;
+      nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else {
+      nextBtn.disabled = true;
+      nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
   }
 
-  function getMBTI() {
-    // E vs I
-    let EI = scores.E >= scores.I ? "E" : "I";
-    // S vs N
-    let SN = scores.S >= scores.N ? "S" : "N";
-    // T vs F
-    let TF = scores.T >= scores.F ? "T" : "F";
-    // J vs P
-    let JP = scores.J >= scores.P ? "J" : "P";
-    return EI + SN + TF + JP;
+  function goToPreviousQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderCurrentQuestion();
+    }
+  }
+
+  function goToNextQuestion() {
+    if (currentQuestionIndex < totalQuestions - 1) {
+      currentQuestionIndex++;
+      renderCurrentQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function calculateMBTI() {
+    const scores = { I: 0, E: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 };
+    
+    answers.forEach((answerIndex, questionIndex) => {
+      const question = quizData[currentLang][questionIndex];
+      const selectedOption = question.options[answerIndex];
+      
+      for (const trait in selectedOption.score) {
+        scores[trait] += selectedOption.score[trait];
+      }
+    });
+    
+    // 確定 MBTI 類型
+    const mbti = 
+      (scores.E > scores.I ? 'E' : 'I') +
+      (scores.N > scores.S ? 'N' : 'S') +
+      (scores.T > scores.F ? 'T' : 'F') +
+      (scores.J > scores.P ? 'J' : 'P');
+    
+    return { mbti, scores };
   }
 
   function showResult() {
-    document.getElementById("quiz").classList.add("hidden");
-    resultEl.classList.remove("hidden");
-    const mbti = getMBTI();
-    typeText.textContent = mbti;
-    descText.textContent = mbtiDescriptions[currentLang][mbti] || "未知人格";
-    resultTitle.textContent = currentLang === "zh" ? "你的求生人格" : "Your Survival Personality";
+    const { mbti, scores } = calculateMBTI();
+    const typeInfo = mbtiTypes[currentLang][mbti];
+    
+    quizEl.classList.add('hidden');
+    resultSection.classList.remove('hidden');
+    resultSection.classList.add('fade-in');
+    
+    resultTitleEl.textContent = currentLang === 'zh' ? '你的求生人格' : 'Your Survival Personality';
+    mbtiTypeEl.textContent = mbti;
+    typeExplanationEl.textContent = `${typeInfo.name} (${mbti})`;
+    descTextEl.textContent = typeInfo.desc;
+    
+    renderChart(scores);
+  }
 
-    // 顯示雷達圖
-    const data = {
-      labels: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'],
-      datasets: [{
-        label: mbti,
-        data: [
-          scores.E,
-          scores.I,
-          scores.S,
-          scores.N,
-          scores.T,
-          scores.F,
-          scores.J,
-          scores.P
-        ],
-        fill: true,
-        backgroundColor: 'rgba(79, 195, 247, 0.4)',
-        borderColor: '#04A9F4',
-        pointBackgroundColor: '#0288D1',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#0288D1'
-      }]
-    };
-
-    const config = {
+  let radarChartInstance = null;
+  function renderChart(scores) {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    if (radarChartInstance) {
+      radarChartInstance.destroy();
+    }
+    radarChartInstance = new Chart(ctx, {
       type: 'radar',
-      data: data,
+      data: {
+        labels: ['I', 'E', 'N', 'S', 'T', 'F', 'J', 'P'],
+        datasets: [{
+          label: currentLang === 'zh' ? '特質分數' : 'Trait Scores',
+          data: [
+            scores.I, scores.E, scores.N, scores.S,
+            scores.T, scores.F, scores.J, scores.P
+          ],
+          backgroundColor: 'rgba(79, 195, 247, 0.3)',
+          borderColor: '#4fc3f7',
+          borderWidth: 2,
+          pointBackgroundColor: '#0288d1',
+          pointRadius: 5,
+          fill: true
+        }]
+      },
       options: {
         scales: {
           r: {
             angleLines: { display: true },
             suggestedMin: 0,
-            suggestedMax: 5
+            suggestedMax: Math.max(...Object.values(scores)) + 1,
+            ticks: {
+              stepSize: 1,
+              color: '#a0d8ff'
+            },
+            pointLabels: {
+              color: '#a0d8ff',
+              font: { size: 14, weight: 'bold' }
+            }
           }
-        }
+        },
+        plugins: {
+          legend: { display: false }
+        },
+        responsive: true,
+        maintainAspectRatio: true
       }
-    };
+    });
+  }
 
-    if (radarChart) {
-      radarChart.destroy();
-    }
-    const ctx =
+  function resetQuiz() {
+    currentQuestionIndex = 0;
+    answers = [];
+    totalQuestions = quizData[currentLang].length;
+    
+    quizEl.classList.remove('hidden');
+    resultSection.classList.add('hidden');
+    
+    renderCurrentQuestion();
+  }
 
+  // Event listeners
+  prevBtn.addEventListener('click', goToPreviousQuestion);
+  nextBtn.addEventListener('click', goToNextQuestion);
+  restartBtn.addEventListener('click', resetQuiz);
+
+  langToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'zh' ? 'en' : 'zh';
+    langToggle.textContent = currentLang === 'zh' ? 'English' : '中文';
+    titleEl.textContent = currentLang === 'zh' ? '你能在零下50度中活下來嗎？' : 'Can You Survive at -50°C?';
+    
+    totalQuestions = quizData[currentLang].length;
+    resetQuiz();
+  });
+
+  // 初始化
+  renderCurrentQuestion();
+</script>
+</body>
+</html>
