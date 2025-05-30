@@ -15,21 +15,6 @@
     position: relative;
     overflow-x: hidden;
   }
-  .snowflake {
-    position: fixed;
-    top: -10px;
-    color: #d0e7ff;
-    font-size: 1.2rem;
-    user-select: none;
-    pointer-events: none;
-    animation-name: fall;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-  @keyframes fall {
-    0% { transform: translateY(0) translateX(0); opacity: 1; }
-    100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
-  }
   .frost-card {
     background: rgba(255 255 255 / 0.15);
     backdrop-filter: blur(8px);
@@ -50,29 +35,6 @@
     background: linear-gradient(135deg, #6dd5fa, #0d47a1);
     box-shadow: 0 6px 20px rgba(4, 121, 197, 0.8);
     transform: scale(1.05);
-  }
-  .btn-ice:active {
-    animation: crack 0.4s ease forwards;
-  }
-  @keyframes crack {
-    0% {
-      box-shadow: 0 0 15px #a0e9ff;
-      transform: scale(1);
-      filter: brightness(1);
-    }
-    50% {
-      box-shadow:
-        0 0 10px #a0e9ff,
-        0 0 20px #00bfff,
-        0 0 40px #00f0ff;
-      filter: brightness(1.3);
-      transform: scale(1.1);
-    }
-    100% {
-      box-shadow: none;
-      filter: brightness(1);
-      transform: scale(1);
-    }
   }
   .option-btn {
     margin: 10px 0;
@@ -97,12 +59,13 @@
   #langToggle:hover {
     background: rgba(255 255 255 / 0.3);
   }
+  #result {
+    margin-top: 40px;
+  }
 </style>
 </head>
 <body>
   <button id="langToggle">English</button>
-
-  <div id="snow-container"></div>
 
   <div class="max-w-xl mx-auto p-6 frost-card mt-10">
     <h1 id="title" class="text-4xl font-bold mb-6 text-center drop-shadow-lg">你能在零下50度中活下來嗎？</h1>
@@ -113,7 +76,7 @@
       <button id="nextBtn" class="btn-ice px-5 py-3 mt-4 w-full" disabled>下一題</button>
     </div>
 
-    <div id="result" class="mt-8 hidden text-white text-center">
+    <div id="result" class="hidden text-white text-center">
       <h2 id="resultTitle" class="text-3xl font-semibold mb-4 drop-shadow-lg">你的求生人格</h2>
       <canvas id="radarChart" width="300" height="300"></canvas>
       <p id="typeText" class="mt-5 text-xl font-medium max-w-lg mx-auto"></p>
@@ -122,6 +85,7 @@
   </div>
 
 <script>
+  // 題目資料
   const quizData = {
     zh: [
       {
@@ -204,104 +168,170 @@
           { text: "Grind teeth and keep trying to make fire, can't stop", score: { T: 1, J: 1 } },
           { text: "Sit down to conserve energy, think about past life", score: { I: 1, N: 1 } },
           { text: "Try to use mouth or other body parts to replace hands", score: { S: 1, P: 1 } },
-          { text: "Shout out to vent emotions, hope to release stress", score: { E: 1, F: 1 } }
+          { text: "Shout to vent emotions and release stress", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "You have no matches left to light a fire. What will you do?",
+        text: "You have no matches left to start a fire. What will you do?",
         options: [
-          { text: "Give up everything and wait quietly, maybe fate", score: { I: 1, N: 1 } },
-          { text: "Hug a dog to try to keep warm", score: { F: 1, S: 1 } },
-          { text: "Use the last bit of strength to move forward", score: { T: 1, J: 1 } },
-          { text: "Try to find something to send a signal for help", score: { E: 1, P: 1 } }
+          { text: "Give up and wait quietly, maybe fate has a plan", score: { I: 1, N: 1 } },
+          { text: "Hold onto a dog and try to get warmth", score: { F: 1, S: 1 } },
+          { text: "Use last bit of strength to keep moving forward", score: { T: 1, J: 1 } },
+          { text: "Try to find something to signal for help", score: { E: 1, P: 1 } }
         ]
       }
     ]
   };
 
-  const descriptions = {
+  const mbtiDescriptions = {
     zh: {
-      ISTJ: "你是嚴謹踏實的求生者，擅長計畫和執行，冷靜面對挑戰。",
-      ISFJ: "你注重安全與細節，願意為團隊付出，是可靠的守護者。",
-      INFJ: "你有直覺與洞察力，善於理解環境與人心，具有遠見。",
-      INTJ: "你是策略家，擅長分析與規劃，追求目標明確。",
-      ISTP: "你實用且冷靜，善於應變，注重當下行動。",
-      ISFP: "你溫柔且有藝術感，善於觀察，重視和諧。",
-      INFP: "你理想主義且有同理心，追求內心真實與價值。",
-      INTP: "你喜歡思考和探索，善於解決問題與理論建構。",
-      ESTP: "你勇敢果斷，喜歡冒險和實際行動。",
-      ESFP: "你開朗活潑，享受當下，善於社交。",
-      ENFP: "你熱情創意，充滿活力，喜歡嘗試新事物。",
-      ENTP: "你聰明靈活，善於辯論和創新。",
-      ESTJ: "你務實且有組織，喜歡掌控和領導。",
-      ESFJ: "你親切熱情，重視人際關係和團隊合作。",
-      ENFJ: "你有魅力且有說服力，善於激勵他人。",
-      ENTJ: "你是天生的領導者，目標明確，行動力強。"
+      ISTJ: "務實且有責任感的守護者，喜歡計畫與秩序。",
+      ISFJ: "溫柔且細心的守護者，重視傳統與他人需求。",
+      INFJ: "深思且理想主義的顧問，尋求意義與成長。",
+      INTJ: "獨立且有策略性的規劃者，重視知識與效率。",
+      ISTP: "冷靜且實用的問題解決者，喜歡動手做事。",
+      ISFP: "溫和且有藝術感的靈魂，享受當下與美感。",
+      INFP: "理想且富同情心的調停者，追求內心價值。",
+      INTP: "分析且好奇的思想家，喜歡理論與探究。",
+      ESTP: "活潑且冒險的實踐者，擅長應對緊急狀況。",
+      ESFP: "開朗且愛熱鬧的表演者，享受生活樂趣。",
+      ENFP: "熱情且有創意的激勵者，喜歡新想法與人群。",
+      ENTP: "機智且善辯的發明家，喜歡挑戰與改變。",
+      ESTJ: "組織且實際的管理者，擅長計劃與決策。",
+      ESFJ: "親切且合作的照顧者，重視和諧與支持。",
+      ENFJ: "有魅力且具同理心的領導者，激勵他人成長。",
+      ENTJ: "果斷且有遠見的指揮官，擅長戰略與領導。"
     },
     en: {
-      ISTJ: "You are a meticulous and practical survivor, good at planning and execution, facing challenges calmly.",
-      ISFJ: "You value safety and details, willing to contribute to the team, a reliable protector.",
-      INFJ: "You have intuition and insight, good at understanding environment and people, visionary.",
-      INTJ: "You are a strategist, good at analysis and planning, with clear goals.",
-      ISTP: "You are practical and calm, good at adapting, focused on the moment.",
-      ISFP: "You are gentle and artistic, observant, valuing harmony.",
-      INFP: "You are idealistic and empathetic, pursuing inner truth and values.",
-      INTP: "You like thinking and exploring, good at problem solving and theory building.",
-      ESTP: "You are brave and decisive, enjoy adventure and practical action.",
-      ESFP: "You are cheerful and lively, enjoy the moment, good at socializing.",
-      ENFP: "You are enthusiastic and creative, full of energy, love trying new things.",
-      ENTP: "You are smart and flexible, good at debating and innovation.",
-      ESTJ: "You are practical and organized, like control and leadership.",
-      ESFJ: "You are friendly and warm, value relationships and teamwork.",
-      ENFJ: "You are charismatic and persuasive, good at motivating others.",
-      ENTJ: "You are a natural leader, goal-oriented, strong in action."
+      ISTJ: "Responsible and practical guardian who values order and planning.",
+      ISFJ: "Gentle and caring protector who values tradition and others' needs.",
+      INFJ: "Thoughtful and idealistic counselor seeking meaning and growth.",
+      INTJ: "Independent and strategic planner valuing knowledge and efficiency.",
+      ISTP: "Calm and practical problem-solver who likes hands-on tasks.",
+      ISFP: "Gentle and artistic soul who enjoys the moment and aesthetics.",
+      INFP: "Idealistic and compassionate mediator pursuing inner values.",
+      INTP: "Analytical and curious thinker who enjoys theories and exploration.",
+      ESTP: "Lively and adventurous doer skilled at handling emergencies.",
+      ESFP: "Cheerful and outgoing performer who enjoys life’s pleasures.",
+      ENFP: "Passionate and creative motivator who loves new ideas and people.",
+      ENTP: "Witty and argumentative inventor who enjoys challenges and change.",
+      ESTJ: "Organized and practical manager skilled in planning and decisions.",
+      ESFJ: "Kind and cooperative caregiver who values harmony and support.",
+      ENFJ: "Charismatic and empathetic leader who inspires growth in others.",
+      ENTJ: "Decisive and visionary commander skilled in strategy and leadership."
     }
   };
 
-  // 語言預設 zh
-  let lang = 'zh';
-  let currentIndex = 0;
+  let currentLang = "zh";
+  let currentQuestionIndex = 0;
   let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+  let selectedOptionIndex = null;
+  let radarChart = null;
 
-  const titleEl = document.getElementById('title');
-  const questionTextEl = document.getElementById('questionText');
-  const optionsEl = document.getElementById('options');
-  const nextBtn = document.getElementById('nextBtn');
-  const resultDiv = document.getElementById('result');
-  const typeText = document.getElementById('typeText');
-  const descText = document.getElementById('descText');
-  const resultTitle = document.getElementById('resultTitle');
-  const langToggle = document.getElementById('langToggle');
+  const titleEl = document.getElementById("title");
+  const questionTextEl = document.getElementById("questionText");
+  const optionsEl = document.getElementById("options");
+  const nextBtn = document.getElementById("nextBtn");
+  const resultEl = document.getElementById("result");
+  const typeText = document.getElementById("typeText");
+  const descText = document.getElementById("descText");
+  const resultTitle = document.getElementById("resultTitle");
+  const langToggle = document.getElementById("langToggle");
 
-  function updateText() {
-    titleEl.textContent = lang === 'zh' ? '你能在零下50度中活下來嗎？' : 'Can You Survive at Minus 50 Degrees?';
-    resultTitle.textContent = lang === 'zh' ? '你的求生人格' : 'Your Survival Personality';
-    nextBtn.textContent = lang === 'zh' ? '下一題' : 'Next Question';
-  }
-
-  function loadQuestion(index) {
-    const q = quizData[lang][index];
-    questionTextEl.textContent = q.text;
-    optionsEl.innerHTML = '';
+  function loadQuestion() {
     nextBtn.disabled = true;
+    selectedOptionIndex = null;
+    const question = quizData[currentLang][currentQuestionIndex];
+    questionTextEl.textContent = question.text;
+    optionsEl.innerHTML = "";
 
-    q.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'btn-ice option-btn';
+    question.options.forEach((opt, idx) => {
+      const btn = document.createElement("button");
       btn.textContent = opt.text;
+      btn.className = "btn-ice option-btn";
+      btn.type = "button";
       btn.onclick = () => {
-        // 清除所有按鈕的選中狀態
-        Array.from(optionsEl.children).forEach(b => b.style.background = '');
-        btn.style.background = 'linear-gradient(135deg, #6dd5fa, #0d47a1)';
-        // 記錄分數
-        Object.entries(opt.score).forEach(([k,v]) => {
-          scores[k] += v;
-        });
+        selectedOptionIndex = idx;
         nextBtn.disabled = false;
+        // 標示選取狀態
+        Array.from(optionsEl.children).forEach(b => b.classList.remove("opacity-60"));
+        btn.classList.remove("opacity-60");
+        Array.from(optionsEl.children).forEach(b => b !== btn ? b.classList.add("opacity-60") : null);
       };
       optionsEl.appendChild(btn);
     });
   }
 
-  function calculate
+  function calculateResult() {
+    // 累加分數
+    const question = quizData[currentLang][currentQuestionIndex];
+    const chosen = question.options[selectedOptionIndex];
+    for (const key in chosen.score) {
+      scores[key] += chosen.score[key];
+    }
+  }
+
+  function getMBTI() {
+    // E vs I
+    let EI = scores.E >= scores.I ? "E" : "I";
+    // S vs N
+    let SN = scores.S >= scores.N ? "S" : "N";
+    // T vs F
+    let TF = scores.T >= scores.F ? "T" : "F";
+    // J vs P
+    let JP = scores.J >= scores.P ? "J" : "P";
+    return EI + SN + TF + JP;
+  }
+
+  function showResult() {
+    document.getElementById("quiz").classList.add("hidden");
+    resultEl.classList.remove("hidden");
+    const mbti = getMBTI();
+    typeText.textContent = mbti;
+    descText.textContent = mbtiDescriptions[currentLang][mbti] || "未知人格";
+    resultTitle.textContent = currentLang === "zh" ? "你的求生人格" : "Your Survival Personality";
+
+    // 顯示雷達圖
+    const data = {
+      labels: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'],
+      datasets: [{
+        label: mbti,
+        data: [
+          scores.E,
+          scores.I,
+          scores.S,
+          scores.N,
+          scores.T,
+          scores.F,
+          scores.J,
+          scores.P
+        ],
+        fill: true,
+        backgroundColor: 'rgba(79, 195, 247, 0.4)',
+        borderColor: '#04A9F4',
+        pointBackgroundColor: '#0288D1',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#0288D1'
+      }]
+    };
+
+    const config = {
+      type: 'radar',
+      data: data,
+      options: {
+        scales: {
+          r: {
+            angleLines: { display: true },
+            suggestedMin: 0,
+            suggestedMax: 5
+          }
+        }
+      }
+    };
+
+    if (radarChart) {
+      radarChart.destroy();
+    }
+    const ctx =
 
