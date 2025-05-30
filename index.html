@@ -1,112 +1,117 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>你能在零下50度中活下來嗎？ / Can You Survive at -50°C?</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: linear-gradient(135deg, #a8d0ff 0%, #002f52 100%);
-      color: #e0f0ff;
-      font-family: 'Noto Sans TC', sans-serif;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>你能在零下50度中活下來嗎？</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background: linear-gradient(135deg, #a8d0ff 0%, #002f52 100%);
+    color: #e0f0ff;
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: #d0e7ff;
+    font-size: 1.2rem;
+    user-select: none;
+    pointer-events: none;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes fall {
+    0% { transform: translateY(0) translateX(0); opacity: 1; }
+    100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+  }
+  .frost-card {
+    background: rgba(255 255 255 / 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(255 255 255 / 0.25);
+    padding: 20px;
+  }
+  .btn-ice {
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+    box-shadow: 0 4px 15px rgba(4, 121, 197, 0.6);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .btn-ice:hover {
+    background: linear-gradient(135deg, #6dd5fa, #0d47a1);
+    box-shadow: 0 6px 20px rgba(4, 121, 197, 0.8);
+    transform: scale(1.05);
+  }
+  .btn-ice:active {
+    animation: crack 0.4s ease forwards;
+  }
+  @keyframes crack {
+    0% {
+      box-shadow: 0 0 15px #a0e9ff;
+      transform: scale(1);
+      filter: brightness(1);
     }
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: #d0e7ff;
-      font-size: 1.2rem;
-      user-select: none;
-      pointer-events: none;
-      animation-name: fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
+    50% {
+      box-shadow:
+        0 0 10px #a0e9ff,
+        0 0 20px #00bfff,
+        0 0 40px #00f0ff;
+      filter: brightness(1.3);
+      transform: scale(1.1);
     }
-    @keyframes fall {
-      0% { transform: translateY(0) translateX(0); opacity: 1; }
-      100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+    100% {
+      box-shadow: none;
+      filter: brightness(1);
+      transform: scale(1);
     }
-    .frost-card {
-      background: rgba(255 255 255 / 0.15);
-      backdrop-filter: blur(8px);
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(255 255 255 / 0.25);
-      padding: 20px;
-    }
-    .btn-ice {
-      background: linear-gradient(135deg, #4fc3f7, #0288d1);
-      box-shadow: 0 4px 15px rgba(4, 121, 197, 0.6);
-      color: white;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      user-select: none;
-      cursor: pointer;
-    }
-    .btn-ice:hover {
-      background: linear-gradient(135deg, #6dd5fa, #0d47a1);
-      box-shadow: 0 6px 20px rgba(4, 121, 197, 0.8);
-      transform: scale(1.05);
-    }
-    .btn-ice:active {
-      animation: crack 0.4s ease forwards;
-    }
-    @keyframes crack {
-      0% {
-        box-shadow: 0 0 15px #a0e9ff;
-        transform: scale(1);
-        filter: brightness(1);
-      }
-      50% {
-        box-shadow:
-          0 0 10px #a0e9ff,
-          0 0 20px #00bfff,
-          0 0 40px #00f0ff;
-        filter: brightness(1.3);
-        transform: scale(1.1);
-      }
-      100% {
-        box-shadow: none;
-        filter: brightness(1);
-        transform: scale(1);
-      }
-    }
-    #langToggle {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: rgba(255 255 255 / 0.25);
-      color: #003366;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      user-select: none;
-      backdrop-filter: blur(6px);
-      transition: background 0.3s ease;
-      z-index: 1000;
-    }
-    #langToggle:hover {
-      background: rgba(255 255 255 / 0.4);
-    }
-  </style>
+  }
+  .option-btn {
+    margin: 10px 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  #langToggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    background: rgba(255 255 255 / 0.15);
+    border: none;
+    color: #e0f0ff;
+    padding: 8px 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  #langToggle:hover {
+    background: rgba(255 255 255 / 0.3);
+  }
+</style>
 </head>
 <body>
   <button id="langToggle">English</button>
 
   <div id="snow-container"></div>
 
-  <div class="max-w-xl mx-auto p-6 frost-card mt-20">
+  <div class="max-w-xl mx-auto p-6 frost-card mt-10">
     <h1 id="title" class="text-4xl font-bold mb-6 text-center drop-shadow-lg">你能在零下50度中活下來嗎？</h1>
 
-    <div id="quiz"></div>
-
-    <button id="submitBtn" class="btn-ice px-5 py-3 mt-4 w-full hidden">查看結果</button>
+    <div id="quiz">
+      <div id="questionText" class="text-xl mb-4"></div>
+      <div id="options"></div>
+      <button id="nextBtn" class="btn-ice px-5 py-3 mt-4 w-full" disabled>下一題</button>
+    </div>
 
     <div id="result" class="mt-8 hidden text-white text-center">
       <h2 id="resultTitle" class="text-3xl font-semibold mb-4 drop-shadow-lg">你的求生人格</h2>
@@ -117,21 +122,6 @@
   </div>
 
 <script>
-  // 雪花特效程式碼
-  const snowContainer = document.getElementById('snow-container');
-  function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.style.left = Math.random() * window.innerWidth + 'px';
-    snowflake.style.animationDuration = 5 + Math.random() * 5 + 's';
-    snowflake.style.fontSize = 10 + Math.random() * 20 + 'px';
-    snowflake.textContent = '❄';
-    snowContainer.appendChild(snowflake);
-    setTimeout(() => snowflake.remove(), 10000);
-  }
-  setInterval(createSnowflake, 200);
-
-  // 雙語題目資料
   const quizData = {
     zh: [
       {
@@ -182,238 +172,136 @@
     ],
     en: [
       {
-        text: "You find the temperature has dropped to minus fifty degrees, what will you do?",
+        text: "You find the temperature has dropped to minus fifty degrees. What will you do?",
         options: [
-          { text: "Stick to the plan, I trust my judgment", score: { I: 1, T: 1 } },
-          { text: "Change plans, wait for company before setting off", score: { F: 1, J: 1 } },
-          { text: "Overthinking slows progress, move forward first", score: { E: 1, P: 1 } },
-          { text: "Don't set off, find a safe place and wait for rescue", score: { I: 1, J: 1 } }
+          { text: "Start as planned, I trust my judgment", score: { I: 1, T: 1 } },
+          { text: "Change plans, wait for someone to accompany me", score: { F: 1, J: 1 } },
+          { text: "Overthinking slows progress, just go first", score: { E: 1, P: 1 } },
+          { text: "Don't depart, find a safe place and wait for rescue", score: { I: 1, J: 1 } }
         ]
       },
       {
-        text: "You fell into icy cold creek, what do you do?",
+        text: "You fell into icy cold water. What will you do?",
         options: [
-          { text: "Find a windbreak under a tree and start a fire", score: { J: 1, S: 1 } },
-          { text: "Start a fire immediately on the spot, no delay", score: { P: 1, T: 1 } },
+          { text: "Find shelter under a tree and make a fire", score: { J: 1, S: 1 } },
+          { text: "Immediately start a fire on the spot, no delay", score: { P: 1, T: 1 } },
           { text: "Try to warm up by running", score: { E: 1, S: 1 } },
-          { text: "Stay calm, take off wet clothes, find a dry place to warm up", score: { I: 1, N: 1 } }
+          { text: "Stay calm, remove wet clothes, find dry place to warm up", score: { I: 1, N: 1 } }
         ]
       },
       {
-        text: "You managed to start a fire but it went out, what do you do?",
+        text: "You managed to light a fire, but it went out. What will you do?",
         options: [
-          { text: "Look for branches and better place to try again", score: { T: 1, S: 1 } },
+          { text: "Look for branches and a better spot to try again", score: { T: 1, S: 1 } },
           { text: "Feel despair and recall past memories", score: { I: 1, N: 1 } },
-          { text: "Use body heat to warm up and wait for rescue", score: { I: 1, N: 1 } },
-          { text: "Try shouting for help or look for others", score: { E: 1, F: 1 } }
+          { text: "Warm your body and wait for rescue", score: { I: 1, N: 1 } },
+          { text: "Try to shout for help or find others", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "Your fingers are frostbitten and almost immobile, what will you do?",
+        text: "Your fingers are frostbitten and barely movable. What will you do?",
         options: [
-          { text: "Grin and bear it to try to start fire, I can't stop", score: { T: 1, J: 1 } },
-          { text: "Sit down to conserve energy, think about my past life", score: { I: 1, N: 1 } },
+          { text: "Grind teeth and keep trying to make fire, can't stop", score: { T: 1, J: 1 } },
+          { text: "Sit down to conserve energy, think about past life", score: { I: 1, N: 1 } },
           { text: "Try to use mouth or other body parts to replace hands", score: { S: 1, P: 1 } },
-          { text: "Shout to vent emotions, hoping to release stress", score: { E: 1, F: 1 } }
+          { text: "Shout out to vent emotions, hope to release stress", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "You have no matches left to start a fire, what will you do?",
+        text: "You have no matches left to light a fire. What will you do?",
         options: [
-          { text: "Give up and wait quietly, maybe it's fate", score: { I: 1, N: 1 } },
-          { text: "Hold the dog, try to warm up from it", score: { F: 1, S: 1 } },
-          { text: "Use last strength to keep going", score: { T: 1, J: 1 } },
-          { text: "Try to find something that can send a signal for help", score: { E: 1, P: 1 } }
+          { text: "Give up everything and wait quietly, maybe fate", score: { I: 1, N: 1 } },
+          { text: "Hug a dog to try to keep warm", score: { F: 1, S: 1 } },
+          { text: "Use the last bit of strength to move forward", score: { T: 1, J: 1 } },
+          { text: "Try to find something to send a signal for help", score: { E: 1, P: 1 } }
         ]
       }
     ]
   };
 
-  const resultData = {
+  const descriptions = {
     zh: {
-      title: "你的求生人格",
-      descriptions: {
-        I: "你是內向且理性的人，善於分析並冷靜面對困境。",
-        E: "你是外向且情感豐富的人，擅長與人互動並表達感受。",
-        N: "你具有豐富的想像力和直覺，喜歡探索未知。",
-        S: "你注重細節和現實，擅長實際行動和觀察。",
-        T: "你講求邏輯和客觀，善於解決問題。",
-        F: "你重視情感和價值觀，善於同理和關懷他人。",
-        J: "你喜歡計畫和組織，有條理地完成任務。",
-        P: "你靈活隨和，善於適應變化和臨機應變。"
-      }
+      ISTJ: "你是嚴謹踏實的求生者，擅長計畫和執行，冷靜面對挑戰。",
+      ISFJ: "你注重安全與細節，願意為團隊付出，是可靠的守護者。",
+      INFJ: "你有直覺與洞察力，善於理解環境與人心，具有遠見。",
+      INTJ: "你是策略家，擅長分析與規劃，追求目標明確。",
+      ISTP: "你實用且冷靜，善於應變，注重當下行動。",
+      ISFP: "你溫柔且有藝術感，善於觀察，重視和諧。",
+      INFP: "你理想主義且有同理心，追求內心真實與價值。",
+      INTP: "你喜歡思考和探索，善於解決問題與理論建構。",
+      ESTP: "你勇敢果斷，喜歡冒險和實際行動。",
+      ESFP: "你開朗活潑，享受當下，善於社交。",
+      ENFP: "你熱情創意，充滿活力，喜歡嘗試新事物。",
+      ENTP: "你聰明靈活，善於辯論和創新。",
+      ESTJ: "你務實且有組織，喜歡掌控和領導。",
+      ESFJ: "你親切熱情，重視人際關係和團隊合作。",
+      ENFJ: "你有魅力且有說服力，善於激勵他人。",
+      ENTJ: "你是天生的領導者，目標明確，行動力強。"
     },
     en: {
-      title: "Your Survival Personality",
-      descriptions: {
-        I: "You are introverted and rational, good at analyzing and staying calm under pressure.",
-        E: "You are extroverted and emotional, skilled at interacting with others and expressing feelings.",
-        N: "You have rich imagination and intuition, love exploring the unknown.",
-        S: "You pay attention to details and reality, good at practical actions and observations.",
-        T: "You value logic and objectivity, adept at problem solving.",
-        F: "You value emotions and values, empathetic and caring.",
-        J: "You like planning and organizing, completing tasks methodically.",
-        P: "You are flexible and adaptable, good at adjusting to changes."
-      }
+      ISTJ: "You are a meticulous and practical survivor, good at planning and execution, facing challenges calmly.",
+      ISFJ: "You value safety and details, willing to contribute to the team, a reliable protector.",
+      INFJ: "You have intuition and insight, good at understanding environment and people, visionary.",
+      INTJ: "You are a strategist, good at analysis and planning, with clear goals.",
+      ISTP: "You are practical and calm, good at adapting, focused on the moment.",
+      ISFP: "You are gentle and artistic, observant, valuing harmony.",
+      INFP: "You are idealistic and empathetic, pursuing inner truth and values.",
+      INTP: "You like thinking and exploring, good at problem solving and theory building.",
+      ESTP: "You are brave and decisive, enjoy adventure and practical action.",
+      ESFP: "You are cheerful and lively, enjoy the moment, good at socializing.",
+      ENFP: "You are enthusiastic and creative, full of energy, love trying new things.",
+      ENTP: "You are smart and flexible, good at debating and innovation.",
+      ESTJ: "You are practical and organized, like control and leadership.",
+      ESFJ: "You are friendly and warm, value relationships and teamwork.",
+      ENFJ: "You are charismatic and persuasive, good at motivating others.",
+      ENTJ: "You are a natural leader, goal-oriented, strong in action."
     }
   };
 
-  let currentLang = 'zh';
-  let currentAnswers = [];
+  // 語言預設 zh
+  let lang = 'zh';
+  let currentIndex = 0;
+  let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
 
   const titleEl = document.getElementById('title');
-  const quizEl = document.getElementById('quiz');
-  const submitBtn = document.getElementById('submitBtn');
-  const resultSection = document.getElementById('result');
-  const resultTitleEl = document.getElementById('resultTitle');
-  const typeTextEl = document.getElementById('typeText');
-  const descTextEl = document.getElementById('descText');
+  const questionTextEl = document.getElementById('questionText');
+  const optionsEl = document.getElementById('options');
+  const nextBtn = document.getElementById('nextBtn');
+  const resultDiv = document.getElementById('result');
+  const typeText = document.getElementById('typeText');
+  const descText = document.getElementById('descText');
+  const resultTitle = document.getElementById('resultTitle');
   const langToggle = document.getElementById('langToggle');
 
-  // 產生題目
-  function renderQuiz() {
-    quizEl.innerHTML = '';
-    currentAnswers = new Array(quizData[currentLang].length).fill(null);
-    quizData[currentLang].forEach((q, i) => {
-      const questionDiv = document.createElement('div');
-      questionDiv.className = 'mb-6';
-      const questionTitle = document.createElement('h3');
-      questionTitle.className = 'text-xl font-semibold mb-3 drop-shadow-lg';
-      questionTitle.textContent = q.text;
-      questionDiv.appendChild(questionTitle);
+  function updateText() {
+    titleEl.textContent = lang === 'zh' ? '你能在零下50度中活下來嗎？' : 'Can You Survive at Minus 50 Degrees?';
+    resultTitle.textContent = lang === 'zh' ? '你的求生人格' : 'Your Survival Personality';
+    nextBtn.textContent = lang === 'zh' ? '下一題' : 'Next Question';
+  }
 
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-ice block w-full text-left px-4 py-2 mb-2';
-        btn.textContent = opt.text;
-        btn.addEventListener('click', () => {
-          currentAnswers[i] = opt.score;
-          // 標示選取狀態
-          // 先移除這題其他按鈕的 active 樣式
-          Array.from(questionDiv.querySelectorAll('button')).forEach(b => b.classList.remove('opacity-50'));
-          btn.classList.add('opacity-50');
-          checkAllAnswered();
+  function loadQuestion(index) {
+    const q = quizData[lang][index];
+    questionTextEl.textContent = q.text;
+    optionsEl.innerHTML = '';
+    nextBtn.disabled = true;
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-ice option-btn';
+      btn.textContent = opt.text;
+      btn.onclick = () => {
+        // 清除所有按鈕的選中狀態
+        Array.from(optionsEl.children).forEach(b => b.style.background = '');
+        btn.style.background = 'linear-gradient(135deg, #6dd5fa, #0d47a1)';
+        // 記錄分數
+        Object.entries(opt.score).forEach(([k,v]) => {
+          scores[k] += v;
         });
-        questionDiv.appendChild(btn);
-      });
-
-      quizEl.appendChild(questionDiv);
-    });
-
-    submitBtn.classList.add('hidden');
-    resultSection.classList.add('hidden');
-  }
-
-  function checkAllAnswered() {
-    if (currentAnswers.every(ans => ans !== null)) {
-      submitBtn.classList.remove('hidden');
-    } else {
-      submitBtn.classList.add('hidden');
-    }
-  }
-
-  // 計算結果
-  function calculateResult() {
-    const totals = { I: 0, E: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 };
-    currentAnswers.forEach(ans => {
-      for (const trait in ans) {
-        totals[trait] += ans[trait];
-      }
-    });
-    return totals;
-  }
-
-  // 顯示結果
-  function showResult() {
-    const totals = calculateResult();
-
-    // 顯示標題和描述
-    resultTitleEl.textContent = resultData[currentLang].title;
-
-    // 找出最高分的特質
-    const maxScore = Math.max(...Object.values(totals));
-    const topTraits = Object.entries(totals)
-      .filter(([_, score]) => score === maxScore)
-      .map(([trait]) => trait);
-
-    typeTextEl.textContent = topTraits.join(', ');
-
-    // 拼出特質描述
-    let descArr = topTraits.map(trait => resultData[currentLang].descriptions[trait]);
-    descTextEl.textContent = descArr.join(' / ');
-
-    // 顯示圖表
-    renderChart(totals);
-
-    resultSection.classList.remove('hidden');
-    submitBtn.classList.add('hidden');
-  }
-
-  // 用 Chart.js 畫雷達圖
-  let radarChartInstance = null;
-  function renderChart(totals) {
-    const ctx = document.getElementById('radarChart').getContext('2d');
-    if (radarChartInstance) {
-      radarChartInstance.destroy();
-    }
-    radarChartInstance = new Chart(ctx, {
-      type: 'radar',
-      data: {
-        labels: ['I', 'E', 'N', 'S', 'T', 'F', 'J', 'P'],
-        datasets: [{
-          label: currentLang === 'zh' ? '特質分數' : 'Trait Scores',
-          data: [
-            totals.I, totals.E, totals.N, totals.S,
-            totals.T, totals.F, totals.J, totals.P
-          ],
-          backgroundColor: 'rgba(79, 195, 247, 0.3)',
-          borderColor: '#4fc3f7',
-          borderWidth: 2,
-          pointBackgroundColor: '#0288d1',
-          pointRadius: 5,
-          fill: true
-        }]
-      },
-      options: {
-        scales: {
-          r: {
-            angleLines: { display: true },
-            suggestedMin: 0,
-            suggestedMax: 5,
-            ticks: {
-              stepSize: 1,
-              color: '#a0d8ff'
-            },
-            pointLabels: {
-              color: '#a0d8ff',
-              font: { size: 14, weight: 'bold' }
-            }
-          }
-        },
-        plugins: {
-          legend: { display: false }
-        },
-        responsive: true,
-        maintainAspectRatio: false
-      }
+        nextBtn.disabled = false;
+      };
+      optionsEl.appendChild(btn);
     });
   }
 
-  submitBtn.addEventListener('click', showResult);
+  function calculate
 
-  // 語言切換
-  langToggle.addEventListener('click', () => {
-    currentLang = currentLang === 'zh' ? 'en' : 'zh';
-    langToggle.textContent = currentLang === 'zh' ? 'English' : '中文';
-    // 切換標題
-    titleEl.textContent = currentLang === 'zh' ? '你能在零下50度中活下來嗎？' : 'Can You Survive at -50°C?';
-    // 重置題目與結果
-    renderQuiz();
-    resultSection.classList.add('hidden');
-  });
-
-  // 初始渲染
-  renderQuiz();
-</script>
-</body>
-</html>
