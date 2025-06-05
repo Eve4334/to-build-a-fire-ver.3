@@ -130,43 +130,43 @@
   const quizData = {
     zh: [
       {
-        text: "你發現氣溫已降到零下五十度，你會？",
+        text: "你正在去找朋友的路上，但你發現外面氣溫已降到零下五十度，你會？",
         options: [
           { text: "按計畫出發，我相信自己判斷", score: { I: 1, T: 1 } },
-          { text: "改變計畫，等有人陪我再出發", score: { E: 1, F: 1 } },
-          { text: "想太多會拖慢進度，先走再說", score: { E: 1, P: 1 } },
+          { text: "改變計畫，告訴朋友狀況請求體諒，等氣象好點再出發", score: { E: 1, F: 1 } },
+          { text: "想太多沒有意義，先走再說", score: { E: 1, P: 1 } },
           { text: "不出發，尋找安全處等待救援", score: { I: 1, J: 1 } }
         ]
       },
       {
-        text: "途中你掉進了冰冷的溪水，你會怎麼辦？",
+        text: "路途中你掉進了冰冷的溪水，但暴風雪仍然嚴峻，你會怎麼辦？",
         options: [
           { text: "找樹下避風處再升火", score: { J: 1, S: 1 } },
           { text: "立刻原地升火，不能再拖了", score: { P: 1, T: 1 } },
-          { text: "嘗試靠奔跑取暖", score: { E: 1, S: 1 } },
+          { text: "嘗試多多活動身體取暖", score: { E: 1, S: 1 } },
           { text: "保持冷靜，脫掉濕衣，尋找乾燥地方保暖", score: { I: 1, N: 1 } }
         ]
       },
       {
-        text: "你好不容易點起火但火卻熄滅了，你會怎麼做？",
+        text: "嘗試了好多次，你好不容易點起火但火卻熄滅了，你會怎麼做？",
         options: [
           { text: "尋找樹枝與更好的位置重新嘗試", score: { T: 1, S: 1 } },
           { text: "內心開始出現絕望與過往回憶", score: { I: 1, F: 1 } },
-          { text: "用身體取暖，等待救援", score: { I: 1, N: 1 } },
+          { text: "用身體取暖，等待救援", score: { I: 1, S: 1 } },
           { text: "嘗試喊叫求救或尋找其他人", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "手指凍傷幾乎不能動，你會？",
+        text: "現在你的手指漸漸開始凍傷，幾乎不能動，你會？",
         options: [
-          { text: "咬牙繼續嘗試升火，我不能停下", score: { T: 1, J: 1 } },
-          { text: "坐下來保存體力，想著自己過去的人生", score: { I: 1, N: 1 } },
+          { text: "努力拍打雙手，再想辦法生火，我不能停下", score: { T: 1, J: 1 } },
+          { text: "坐下來保存體力，回想自己過去的人生", score: { I: 1, N: 1 } },
           { text: "嘗試用嘴或其他部位取代雙手動作", score: { S: 1, P: 1 } },
-          { text: "大喊發洩情緒，希望釋放壓力", score: { E: 1, F: 1 } }
+          { text: "大喊發洩情緒釋放壓力，排解完情緒後再嘗試", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "你沒有任何的火柴能夠點火了，你會？",
+        text: "現在你已經沒有任何的火柴能夠點火了，你會？",
         options: [
           { text: "放下一切靜靜等待，也許是命運的安排", score: { I: 1, F: 1 } },
           { text: "抱住狗，試圖從牠身上取暖", score: { F: 1, S: 1 } },
@@ -177,48 +177,49 @@
     ],
     en: [
       {
-        text: "You find the temperature has dropped to minus fifty degrees, what will you do?",
+        text: "You're on your way to meet a friend, but you realize the temperature has dropped to -50°C. What would you do?",
         options: [
-          { text: "Stick to the plan, I trust my judgment", score: { I: 1, T: 1 } },
-          { text: "Change plans, wait for company before setting off", score: { E: 1, F: 1 } },
-          { text: "Overthinking slows progress, move forward first", score: { E: 1, P: 1 } },
-          { text: "Don't set off, find a safe place and wait for rescue", score: { I: 1, J: 1 } }
+          { text: "Stick to the plan. I trust my own judgment", score: { I: 1, T: 1 } },
+          { text: "Change the plan, inform my friend about the situation, and wait until the weather improves", score: { E: 1, F: 1 } },
+          { text: "Thinking too much is pointless — just go", score: { E: 1, P: 1 } },
+          { text: "Don’t go. Find a safe place and wait for help", score: { I: 1, J: 1 } }
+
         ]
       },
       {
-        text: "You fell into icy cold creek, what do you do?",
+        text: "You’ve fallen into an icy stream along the way, and the blizzard is still raging. What will you do??",
         options: [
-          { text: "Find a windbreak under a tree and start a fire", score: { J: 1, S: 1 } },
-          { text: "Start a fire immediately on the spot, no delay", score: { P: 1, T: 1 } },
-          { text: "Try to warm up by running", score: { E: 1, S: 1 } },
+          { text: "Find shelter under a tree to block the wind before starting a fire", score: { J: 1, S: 1 } },
+          { text: "Start a fire right where you are — there’s no time to waste", score: { P: 1, T: 1 } },
+          { text: "Try to stay warm by moving your body as much as possible", score: { E: 1, S: 1 } },
           { text: "Stay calm, take off wet clothes, find a dry place to warm up", score: { I: 1, N: 1 } }
         ]
       },
       {
-        text: "You managed to start a fire but it went out, what do you do?",
+        text: "After many tries, you finally manage to start a fire — but it goes out. What do you do?",
         options: [
           { text: "Look for branches and better place to try again", score: { T: 1, S: 1 } },
-          { text: "Feel despair and recall past memories", score: { I: 1, F: 1 } },
-          { text: "Use body heat to warm up and wait for rescue", score: { I: 1, N: 1 } },
+          { text: "You begin to feel hopeless and flooded with memories", score: { I: 1, F: 1 } },
+          { text: "Use body heat to warm up and wait for rescue", score: { I: 1, S: 1 } },
           { text: "Try shouting for help or look for others", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "Your fingers are frostbitten and almost immobile, what will you do?",
+        text: "Your fingers are starting to freeze and can barely move. What will you do?",
         options: [
-          { text: "Grin and bear it to try to start fire, I can't stop", score: { T: 1, J: 1 } },
+          { text: "Keep slapping your hands and try to make a fire — I can’t stop now", score: { T: 1, J: 1 } },
           { text: "Sit down to conserve energy, think about my past life", score: { I: 1, N: 1 } },
           { text: "Try to use mouth or other body parts to replace hands", score: { S: 1, P: 1 } },
-          { text: "Shout to vent emotions, hoping to release stress", score: { E: 1, F: 1 } }
+          { text: "Shout to release your emotions, then try again after letting it out", score: { E: 1, F: 1 } }
         ]
       },
       {
-        text: "You have no matches left to start a fire, what will you do?",
+        text: "You’ve run out of matches and can no longer make a fire. What will you do?",
         options: [
-          { text: "Give up and wait quietly, maybe it's fate", score: { I: 1, F: 1 } },
-          { text: "Hold the dog, try to warm up from it", score: { F: 1, S: 1 } },
-          { text: "Use last strength to keep going", score: { T: 1, J: 1 } },
-          { text: "Try to find something that can send a signal for help", score: { N: 1, P: 1 } }
+          { text: "Let go of everything and quietly wait — maybe this is fate", score: { I: 1, F: 1 } },
+          { text: "Hold your dog tightly and try to stay warm with its body heat", score: { F: 1, S: 1 } },
+          { text: "Use your last bit of strength to keep moving forward", score: { T: 1, J: 1 } },
+          { text: "Look for something you can use to send a signal for help", score: { N: 1, P: 1 } }
         ]
       }
     ]
